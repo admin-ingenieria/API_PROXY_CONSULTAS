@@ -1,0 +1,35 @@
+# Entorno virtual
+env/
+venv/
+.venv/
+
+# Python
+__pycache__/
+*.py[cod]
+
+# Variables de entorno y secretos
+.env
+*.pem
+*.key
+service_account/
+service-*.json
+tc-sc-*.json
+
+# Logs (algunos superan varios GB)
+*.log
+*.log.*
+*.bak
+
+# Datos y reportes generados
+reportesExcel/
+*.xlsx
+*.csv
+
+# Configuracion local de Claude Code
+.claude/
+
+# Editores y sistema
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store

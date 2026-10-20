@@ -1,0 +1,76 @@
+select count(*) as Ok, 
+#####
+(select  count(distinct r.codigoSeguimiento) as cant from zeusdb.registros r
+            inner join zeusdb.datos_recepciones d on r.idDatosRecepcion = d.codigoRecepcion
+            WHERE
+                d.fechaFin BETWEEN DATE_ADD(CURDATE() - INTERVAL 3 HOUR, INTERVAL 30 MINUTE) AND DATE_ADD(CURDATE(), INTERVAL 1 DAY)
+              -- and d.estadoRecepcion = 0
+              and r.idEstado not in (2, 17, 18)
+              and r.estadoSistemico not in ('ANULADO', 'CANCELADO', 'REALOCADO', 'FATURADO', 'ENTREGA TOTAL')
+              and d.placaRecepcion <> 'PRUEBA') total,
+#####
+	(select count(*) from (
+select  count(distinct r.codigoSeguimiento) as cant from zeusdb.registros r
+            inner join zeusdb.datos_recepciones d on r.idDatosRecepcion = d.codigoRecepcion
+            WHERE
+                d.fechaFin BETWEEN DATE_ADD(CURDATE() - INTERVAL 3 HOUR, INTERVAL 30 MINUTE) AND DATE_ADD(CURDATE(), INTERVAL 1 DAY)
+              and d.estadoRecepcion = 0
+              and r.idEstado not in (2, 17, 18)
+              and r.estadoSistemico not in ('ANULADO', 'CANCELADO', 'REALOCADO', 'FATURADO', 'ENTREGA TOTAL')
+              and d.placaRecepcion <> 'PRUEBA'
+              group by d.codigoRecepcion
+) as recepciones_cerradas) recepciones_cerradas,
+#####
+(select count(*) from (
+select  count(distinct r.codigoSeguimiento) as cant from zeusdb.registros r
+            inner join zeusdb.datos_recepciones d on r.idDatosRecepcion = d.codigoRecepcion
+            WHERE
+                d.fechaFin BETWEEN DATE_ADD(CURDATE() - INTERVAL 3 HOUR, INTERVAL 30 MINUTE) AND DATE_ADD(CURDATE(), INTERVAL 1 DAY)
+              and d.estadoRecepcion = 1
+              and r.idEstado not in (2, 17, 18)
+              and r.estadoSistemico not in ('ANULADO', 'CANCELADO', 'REALOCADO', 'FATURADO', 'ENTREGA TOTAL')
+              and d.placaRecepcion <> 'PRUEBA'
+              group by d.codigoRecepcion
+) as recepciones_cerradas) recepciones_abiertas,
+#####
+ (select max(fechaRegistro) from zeusdb.registros r  where estadoTMS = 'Ok' )as ultimo_registro_zeus,
+#####
+(select  count(distinct r.codigoSeguimiento) as cant from zeusdb.registros r
+            inner join zeusdb.datos_recepciones d on r.idDatosRecepcion = d.codigoRecepcion
+            WHERE
+                d.fechaFin BETWEEN DATE_ADD(CURDATE() - INTERVAL 3 HOUR, INTERVAL 30 MINUTE) AND DATE_ADD(CURDATE(), INTERVAL 1 DAY)
+              -- and d.estadoRecepcion = 0
+              and r.idEstado not in (2, 17, 18)
+              and r.estadoSistemico not in ('ANULADO', 'CANCELADO', 'REALOCADO', 'FATURADO', 'ENTREGA TOTAL')
+              and r.estadoTMS = ''
+              and d.placaRecepcion <> 'PRUEBA') pendientes,
+#####
+(select  count(distinct r.codigoSeguimiento) as cant from zeusdb.registros r
+            inner join zeusdb.datos_recepciones d on r.idDatosRecepcion = d.codigoRecepcion
+            WHERE
+                d.fechaFin BETWEEN DATE_ADD(CURDATE() - INTERVAL 3 HOUR, INTERVAL 30 MINUTE) AND DATE_ADD(CURDATE(), INTERVAL 1 DAY)
+              -- and d.estadoRecepcion = 0
+              and r.idEstado not in (2, 17, 18)
+              and r.estadoSistemico not in ('ANULADO', 'CANCELADO', 'REALOCADO', 'FATURADO', 'ENTREGA TOTAL')
+              and r.estadoTMS = 'Nok'
+              and d.placaRecepcion <> 'PRUEBA') Nok,
+#####
+(select  count(distinct r.codigoSeguimiento) as cant from zeusdb.registros r
+            inner join zeusdb.datos_recepciones d on r.idDatosRecepcion = d.codigoRecepcion
+            WHERE
+                d.fechaFin BETWEEN DATE_ADD(CURDATE() - INTERVAL 3 HOUR, INTERVAL 30 MINUTE) AND DATE_ADD(CURDATE(), INTERVAL 1 DAY)
+              -- and d.estadoRecepcion = 0
+              and r.idEstado not in (2, 17, 18)
+              and r.estadoSistemico not in ('ANULADO', 'CANCELADO', 'REALOCADO', 'FATURADO', 'ENTREGA TOTAL')
+              and r.estadoTMS = 'Procesando'
+              and d.placaRecepcion <> 'PRUEBA') Procesando
+#####
+	from zeusdb.registros r
+            inner join zeusdb.datos_recepciones d on r.idDatosRecepcion = d.codigoRecepcion
+            WHERE
+                d.fechaFin BETWEEN DATE_ADD(CURDATE() - INTERVAL 3 HOUR, INTERVAL 30 MINUTE) AND DATE_ADD(CURDATE(), INTERVAL 1 DAY)
+              -- and d.estadoRecepcion = 0
+              and r.idEstado not in (2, 17, 18)
+              and r.estadoSistemico not in ('ANULADO', 'CANCELADO', 'REALOCADO', 'FATURADO', 'ENTREGA TOTAL')
+              and r.estadoTMS = 'Ok'
+              and d.placaRecepcion <> 'PRUEBA'

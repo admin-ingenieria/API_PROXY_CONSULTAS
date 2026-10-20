@@ -1,0 +1,554 @@
+SELECT
+*
+FROM 
+(SELECT
+  'clasevehiculo_veh' AS TABLA,
+  MAX(FECHA_CARGA) AS FECHA_CARGA,
+  (
+    SELECT FECHA_CARGA
+    FROM tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.tms_ingesta
+    WHERE TABLA = 'clasevehiculo_veh'
+  ) AS EJECUCION_BOT,
+  '1 dia' AS FRECUENCIA_EJECUCION_HORAS,
+  CASE 
+    WHEN (DATETIME_ADD(MAX(FECHA_CARGA), INTERVAL 24 HOUR) > TIMESTAMP(CURRENT_DATETIME('America/Lima')) or DATETIME_ADD((
+    SELECT FECHA_CARGA
+    FROM tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.tms_ingesta
+    WHERE TABLA = 'clasevehiculo_veh'
+  ), INTERVAL 24 HOUR) > TIMESTAMP(CURRENT_DATETIME('America/Lima')))
+    THEN 'OK'
+    ELSE 'Revisar' END AS VALIDACION_CARGA
+FROM `tc-sc-bi-bigdata-hdpe-pjx-dev.REPLICA_ESPEJO_TMS.clasevehiculo_veh` ig
+UNION ALL
+SELECT
+  'cliente_com' AS TABLA,
+  MAX(FECHA_CARGA) AS FECHA_CARGA,
+  (
+    SELECT FECHA_CARGA
+    FROM tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.tms_ingesta
+    WHERE TABLA = 'cliente_com'
+  ) AS EJECUCION_BOT,
+  '1 dia' AS FRECUENCIA_EJECUCION_HORAS,
+  CASE 
+    WHEN (DATETIME_ADD(MAX(FECHA_CARGA), INTERVAL 24 HOUR) > TIMESTAMP(CURRENT_DATETIME('America/Lima')) or DATETIME_ADD((
+    SELECT FECHA_CARGA
+    FROM tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.tms_ingesta
+    WHERE TABLA = 'cliente_com'
+  ), INTERVAL 24 HOUR) > TIMESTAMP(CURRENT_DATETIME('America/Lima')))
+    THEN 'OK'
+    ELSE 'Revisar' END AS VALIDACION_CARGA
+FROM `tc-sc-bi-bigdata-hdpe-pjx-dev.REPLICA_ESPEJO_TMS.cliente_com` ig
+UNION ALL
+SELECT
+  'conductor_veh' AS TABLA,
+  MAX(FECHA_CARGA) AS FECHA_CARGA,
+  (
+    SELECT FECHA_CARGA
+    FROM tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.tms_ingesta
+    WHERE TABLA = 'conductor_veh'
+  ) AS EJECUCION_BOT,
+  '1 dia' AS FRECUENCIA_EJECUCION_HORAS,
+  CASE 
+    WHEN (DATETIME_ADD(MAX(FECHA_CARGA), INTERVAL 24 HOUR) > TIMESTAMP(CURRENT_DATETIME('America/Lima')) or DATETIME_ADD((
+    SELECT FECHA_CARGA
+    FROM tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.tms_ingesta
+    WHERE TABLA = 'conductor_veh'
+  ), INTERVAL 24  HOUR) > TIMESTAMP(CURRENT_DATETIME('America/Lima')))
+    THEN 'OK'
+    ELSE 'Revisar' END AS VALIDACION_CARGA
+FROM `tc-sc-bi-bigdata-hdpe-pjx-dev.REPLICA_ESPEJO_TMS.conductor_veh` ig
+UNION ALL
+SELECT
+  'demografico_cor' AS TABLA,
+  MAX(FECHA_CARGA) AS FECHA_CARGA,
+  (
+    SELECT FECHA_CARGA
+    FROM tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.tms_ingesta
+    WHERE TABLA = 'demografico_cor'
+  ) AS EJECUCION_BOT,
+  '1 dia' AS FRECUENCIA_EJECUCION_HORAS,
+  CASE 
+    WHEN (DATETIME_ADD(MAX(FECHA_CARGA), INTERVAL 24 HOUR) > TIMESTAMP(CURRENT_DATETIME('America/Lima')) or DATETIME_ADD((
+    SELECT FECHA_CARGA
+    FROM tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.tms_ingesta
+    WHERE TABLA = 'demografico_cor'
+  ), INTERVAL 24 HOUR) > TIMESTAMP(CURRENT_DATETIME('America/Lima')))
+    THEN 'OK'
+    ELSE 'Revisar' END AS VALIDACION_CARGA
+FROM `tc-sc-bi-bigdata-hdpe-pjx-dev.REPLICA_ESPEJO_TMS.demografico_cor` ig
+UNION ALL
+SELECT
+  'docoperacionenvio_int' AS TABLA,
+  MAX(FECHA_CARGA) AS FECHA_CARGA,
+  (
+    SELECT FECHA_CARGA
+    FROM tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.tms_ingesta
+    WHERE TABLA = 'docoperacionenvio_int'
+  ) AS EJECUCION_BOT,
+  '15 min' AS FRECUENCIA_EJECUCION_HORAS,
+  CASE 
+    WHEN (DATETIME_ADD(MAX(FECHA_CARGA), INTERVAL 15 + 15 MINUTE) > TIMESTAMP(CURRENT_DATETIME('America/Lima')) or DATETIME_ADD((
+    SELECT FECHA_CARGA
+    FROM tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.tms_ingesta
+    WHERE TABLA = 'docoperacionenvio_int'
+  ), INTERVAL 15 + 15 MINUTE) > TIMESTAMP(CURRENT_DATETIME('America/Lima')))
+    THEN 'OK'
+    ELSE 'Revisar' END AS VALIDACION_CARGA
+FROM `tc-sc-bi-bigdata-hdpe-pjx-dev.REPLICA_ESPEJO_TMS.docoperacionenvio_int` ig
+UNION ALL
+SELECT
+  'documentooperacion_int' AS TABLA,
+  MAX(FECHA_CARGA) AS FECHA_CARGA,
+  (
+    SELECT FECHA_CARGA
+    FROM tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.tms_ingesta
+    WHERE TABLA = 'documentooperacion_int'
+  ) AS EJECUCION_BOT,
+  '15 min' AS FRECUENCIA_EJECUCION_HORAS,
+  CASE 
+    WHEN (DATETIME_ADD(MAX(FECHA_CARGA), INTERVAL 15 + 15 MINUTE) > TIMESTAMP(CURRENT_DATETIME('America/Lima')) or DATETIME_ADD((
+    SELECT FECHA_CARGA
+    FROM tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.tms_ingesta
+    WHERE TABLA = 'documentooperacion_int'
+  ), INTERVAL 15 + 15 MINUTE) > TIMESTAMP(CURRENT_DATETIME('America/Lima')))
+    THEN 'OK'
+    ELSE 'Revisar' END AS VALIDACION_CARGA
+FROM `tc-sc-bi-bigdata-hdpe-pjx-dev.REPLICA_ESPEJO_TMS.documentooperacion_int` ig
+UNION ALL
+SELECT
+  'envio_env' AS TABLA,
+  MAX(FECHA_CARGA) AS FECHA_CARGA,
+  (
+    SELECT FECHA_CARGA
+    FROM tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.tms_ingesta
+    WHERE TABLA = 'envio_env'
+  ) AS EJECUCION_BOT,
+  '15 min' AS FRECUENCIA_EJECUCION_HORAS,
+  CASE 
+    WHEN (DATETIME_ADD(MAX(FECHA_CARGA), INTERVAL 15+15 MINUTE) > TIMESTAMP(CURRENT_DATETIME('America/Lima')) or DATETIME_ADD((
+    SELECT FECHA_CARGA
+    FROM tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.tms_ingesta
+    WHERE TABLA = 'envio_env'
+  ), INTERVAL 15+15 MINUTE) > TIMESTAMP(CURRENT_DATETIME('America/Lima')))
+    THEN 'OK'
+    ELSE 'Revisar' END AS VALIDACION_CARGA
+FROM `tc-sc-bi-bigdata-hdpe-pjx-dev.REPLICA_ESPEJO_TMS.envio_env` ig
+UNION ALL
+SELECT
+  'envioconsolidado_env' AS TABLA,
+  MAX(FECHA_CARGA) AS FECHA_CARGA,
+  (
+    SELECT FECHA_CARGA
+    FROM tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.tms_ingesta
+    WHERE TABLA = 'envioconsolidado_env'
+  ) AS EJECUCION_BOT,
+  '15 min' AS FRECUENCIA_EJECUCION_HORAS,
+  CASE 
+    WHEN (DATETIME_ADD(MAX(FECHA_CARGA), INTERVAL 15 + 15 MINUTE) > TIMESTAMP(CURRENT_DATETIME('America/Lima')) or DATETIME_ADD((
+    SELECT FECHA_CARGA
+    FROM tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.tms_ingesta
+    WHERE TABLA = 'envioconsolidado_env'
+  ), INTERVAL 15 + 15 MINUTE) > TIMESTAMP(CURRENT_DATETIME('America/Lima')))
+    THEN 'OK'
+    ELSE 'Revisar' END AS VALIDACION_CARGA
+FROM `tc-sc-bi-bigdata-hdpe-pjx-dev.REPLICA_ESPEJO_TMS.envioconsolidado_env` ig
+UNION ALL
+SELECT
+  'enviodinamico_env' AS TABLA,
+  MAX(FECHA_CARGA) AS FECHA_CARGA,
+  (
+    SELECT FECHA_CARGA
+    FROM tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.tms_ingesta
+    WHERE TABLA = 'enviodinamico_env'
+  ) AS EJECUCION_BOT,
+  '15 min' AS FRECUENCIA_EJECUCION_HORAS,
+  CASE 
+    WHEN (DATETIME_ADD(MAX(FECHA_CARGA), INTERVAL 15+15 MINUTE) > TIMESTAMP(CURRENT_DATETIME('America/Lima')) or DATETIME_ADD((
+    SELECT FECHA_CARGA
+    FROM tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.tms_ingesta
+    WHERE TABLA = 'enviodinamico_env'
+  ), INTERVAL 15+15 MINUTE) > TIMESTAMP(CURRENT_DATETIME('America/Lima')))
+    THEN 'OK'
+    ELSE 'Revisar' END AS VALIDACION_CARGA
+FROM `tc-sc-bi-bigdata-hdpe-pjx-dev.REPLICA_ESPEJO_TMS.enviodinamico_env` ig
+UNION ALL
+SELECT
+  'enviolog_env' AS TABLA,
+  MAX(FECHA_CARGA) AS FECHA_CARGA,
+  (
+    SELECT FECHA_CARGA
+    FROM tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.tms_ingesta
+    WHERE TABLA = 'enviolog_env'
+  ) AS EJECUCION_BOT,
+  '15 min' AS FRECUENCIA_EJECUCION_HORAS,
+  CASE 
+    WHEN (DATETIME_ADD(MAX(FECHA_CARGA), INTERVAL 15+15 MINUTE) > TIMESTAMP(CURRENT_DATETIME('America/Lima')) or DATETIME_ADD((
+    SELECT FECHA_CARGA
+    FROM tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.tms_ingesta
+    WHERE TABLA = 'enviolog_env'
+  ), INTERVAL 15+15 MINUTE) > TIMESTAMP(CURRENT_DATETIME('America/Lima')))
+    THEN 'OK'
+    ELSE 'Revisar' END AS VALIDACION_CARGA
+FROM `tc-sc-bi-bigdata-hdpe-pjx-dev.REPLICA_ESPEJO_TMS.enviolog_env` ig
+UNION ALL
+SELECT
+  'estadoenvio_env' AS TABLA,
+  MAX(FECHA_CARGA) AS FECHA_CARGA,
+  (
+    SELECT FECHA_CARGA
+    FROM tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.tms_ingesta
+    WHERE TABLA = 'estadoenvio_env'
+  ) AS EJECUCION_BOT,
+  '1 dia' AS FRECUENCIA_EJECUCION_HORAS,
+  CASE 
+    WHEN (DATETIME_ADD(MAX(FECHA_CARGA), INTERVAL 24 HOUR) > TIMESTAMP(CURRENT_DATETIME('America/Lima')) or DATETIME_ADD((
+    SELECT FECHA_CARGA
+    FROM tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.tms_ingesta
+    WHERE TABLA = 'estadoenvio_env'
+  ), INTERVAL 24 HOUR) > TIMESTAMP(CURRENT_DATETIME('America/Lima')))
+    THEN 'OK'
+    ELSE 'Revisar' END AS VALIDACION_CARGA
+FROM `tc-sc-bi-bigdata-hdpe-pjx-dev.REPLICA_ESPEJO_TMS.estadoenvio_env` ig
+UNION ALL
+SELECT
+  'formaentrega_com' AS TABLA,
+  MAX(FECHA_CARGA) AS FECHA_CARGA,
+  (
+    SELECT FECHA_CARGA
+    FROM tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.tms_ingesta
+    WHERE TABLA = 'formaentrega_com'
+  ) AS EJECUCION_BOT,
+  '1 dia' AS FRECUENCIA_EJECUCION_HORAS,
+  CASE 
+    WHEN (DATETIME_ADD(MAX(FECHA_CARGA), INTERVAL 24 HOUR) > TIMESTAMP(CURRENT_DATETIME('America/Lima')) or DATETIME_ADD((
+    SELECT FECHA_CARGA
+    FROM tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.tms_ingesta
+    WHERE TABLA = 'formaentrega_com'
+  ), INTERVAL 24 HOUR) > TIMESTAMP(CURRENT_DATETIME('America/Lima')))
+    THEN 'OK'
+    ELSE 'Revisar' END AS VALIDACION_CARGA
+FROM `tc-sc-bi-bigdata-hdpe-pjx-dev.REPLICA_ESPEJO_TMS.formaentrega_com` ig
+UNION ALL
+SELECT
+  'manifiesto_des' AS TABLA,
+  MAX(FECHA_CARGA) AS FECHA_CARGA,
+  (
+    SELECT FECHA_CARGA
+    FROM tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.tms_ingesta
+    WHERE TABLA = 'manifiesto_des'
+  ) AS EJECUCION_BOT,
+  '15 min' AS FRECUENCIA_EJECUCION_HORAS,
+  CASE 
+    WHEN (DATETIME_ADD(MAX(FECHA_CARGA), INTERVAL 15 + 15 MINUTE) > TIMESTAMP(CURRENT_DATETIME('America/Lima')) or DATETIME_ADD((
+    SELECT FECHA_CARGA
+    FROM tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.tms_ingesta
+    WHERE TABLA = 'manifiesto_des'
+  ), INTERVAL 15 + 15 MINUTE) > TIMESTAMP(CURRENT_DATETIME('America/Lima')))
+    THEN 'OK'
+    ELSE 'Revisar' END AS VALIDACION_CARGA
+FROM `tc-sc-bi-bigdata-hdpe-pjx-dev.REPLICA_ESPEJO_TMS.manifiesto_des` ig
+UNION ALL
+SELECT
+  'manifiestoenvio_des' AS TABLA,
+  MAX(FECHA_CARGA) AS FECHA_CARGA,
+  (
+    SELECT FECHA_CARGA
+    FROM tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.tms_ingesta
+    WHERE TABLA = 'manifiestoenvio_des'
+  ) AS EJECUCION_BOT,
+  '15 min' AS FRECUENCIA_EJECUCION_HORAS,
+  CASE 
+    WHEN (DATETIME_ADD(MAX(FECHA_CARGA), INTERVAL 15 + 15 MINUTE) > TIMESTAMP(CURRENT_DATETIME('America/Lima')) or DATETIME_ADD((
+    SELECT FECHA_CARGA
+    FROM tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.tms_ingesta
+    WHERE TABLA = 'manifiestoenvio_des'
+  ), INTERVAL 15 + 15 MINUTE) > TIMESTAMP(CURRENT_DATETIME('America/Lima')))
+    THEN 'OK'
+    ELSE 'Revisar' END AS VALIDACION_CARGA
+FROM `tc-sc-bi-bigdata-hdpe-pjx-dev.REPLICA_ESPEJO_TMS.manifiestoenvio_des` ig
+UNION ALL
+SELECT
+  'mensajero_org' AS TABLA,
+  MAX(FECHA_CARGA) AS FECHA_CARGA,
+  (
+    SELECT FECHA_CARGA
+    FROM tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.tms_ingesta
+    WHERE TABLA = 'mensajero_org'
+  ) AS EJECUCION_BOT,
+  '1 dia' AS FRECUENCIA_EJECUCION_HORAS,
+  CASE 
+    WHEN (DATETIME_ADD(MAX(FECHA_CARGA), INTERVAL 24 HOUR) > TIMESTAMP(CURRENT_DATETIME('America/Lima')) or DATETIME_ADD((
+    SELECT FECHA_CARGA
+    FROM tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.tms_ingesta
+    WHERE TABLA = 'mensajero_org'
+  ), INTERVAL 24 HOUR) > TIMESTAMP(CURRENT_DATETIME('America/Lima')))
+    THEN 'OK'
+    ELSE 'Revisar' END AS VALIDACION_CARGA
+FROM `tc-sc-bi-bigdata-hdpe-pjx-dev.REPLICA_ESPEJO_TMS.mensajero_org` ig
+UNION ALL
+SELECT
+  'novedadenvio_env' AS TABLA,
+  MAX(FECHA_CARGA) AS FECHA_CARGA,
+  (
+    SELECT FECHA_CARGA
+    FROM tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.tms_ingesta
+    WHERE TABLA = 'novedadenvio_env'
+  ) AS EJECUCION_BOT,
+  '15 min' AS FRECUENCIA_EJECUCION_HORAS,
+  CASE 
+    WHEN (DATETIME_ADD(MAX(FECHA_CARGA), INTERVAL 15 + 15 MINUTE) > TIMESTAMP(CURRENT_DATETIME('America/Lima')) or DATETIME_ADD((
+    SELECT FECHA_CARGA
+    FROM tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.tms_ingesta
+    WHERE TABLA = 'novedadenvio_env'
+  ), INTERVAL 15 + 15 MINUTE) > TIMESTAMP(CURRENT_DATETIME('America/Lima')))
+    THEN 'OK'
+    ELSE 'Revisar' END AS VALIDACION_CARGA
+FROM `tc-sc-bi-bigdata-hdpe-pjx-dev.REPLICA_ESPEJO_TMS.novedadenvio_env` ig
+UNION ALL
+SELECT
+  'oficina_org' AS TABLA,
+  MAX(FECHA_CARGA) AS FECHA_CARGA,
+  (
+    SELECT FECHA_CARGA
+    FROM tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.tms_ingesta
+    WHERE TABLA = 'oficina_org'
+  ) AS EJECUCION_BOT,
+  '1 dia' AS FRECUENCIA_EJECUCION_HORAS,
+  CASE 
+    WHEN (DATETIME_ADD(MAX(FECHA_CARGA), INTERVAL 24 HOUR) > TIMESTAMP(CURRENT_DATETIME('America/Lima')) or DATETIME_ADD((
+    SELECT FECHA_CARGA
+    FROM tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.tms_ingesta
+    WHERE TABLA = 'oficina_orgv'
+  ), INTERVAL 24 HOUR) > TIMESTAMP(CURRENT_DATETIME('America/Lima')))
+    THEN 'OK'
+    ELSE 'Revisar' END AS VALIDACION_CARGA
+FROM `tc-sc-bi-bigdata-hdpe-pjx-dev.REPLICA_ESPEJO_TMS.oficina_org` ig
+UNION ALL
+SELECT
+  'planilladevolucion_env' AS TABLA,
+  MAX(FECHA_CARGA) AS FECHA_CARGA,
+  (
+    SELECT FECHA_CARGA
+    FROM tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.tms_ingesta
+    WHERE TABLA = 'planilladevolucion_env'
+  ) AS EJECUCION_BOT,
+  '1 dia' AS FRECUENCIA_EJECUCION_HORAS,
+  CASE 
+    WHEN (DATETIME_ADD(MAX(FECHA_CARGA), INTERVAL 24 HOUR) > TIMESTAMP(CURRENT_DATETIME('America/Lima')) or DATETIME_ADD((
+    SELECT FECHA_CARGA
+    FROM tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.tms_ingesta
+    WHERE TABLA = 'planilladevolucion_env'
+  ), INTERVAL 24 HOUR) > TIMESTAMP(CURRENT_DATETIME('America/Lima')))
+    THEN 'OK'
+    ELSE 'Revisar' END AS VALIDACION_CARGA
+FROM `tc-sc-bi-bigdata-hdpe-pjx-dev.REPLICA_ESPEJO_TMS.planilladevolucion_env` ig
+UNION ALL
+SELECT
+  'planillareparto_env' AS TABLA,
+  MAX(FECHA_CARGA) AS FECHA_CARGA,
+  (
+    SELECT FECHA_CARGA
+    FROM tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.tms_ingesta
+    WHERE TABLA = 'planillareparto_env'
+  ) AS EJECUCION_BOT,
+  '15 min' AS FRECUENCIA_EJECUCION_HORAS,
+  CASE 
+    WHEN (DATETIME_ADD(MAX(FECHA_CARGA), INTERVAL 15 + 15 MINUTE) > TIMESTAMP(CURRENT_DATETIME('America/Lima')) or DATETIME_ADD((
+    SELECT FECHA_CARGA
+    FROM tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.tms_ingesta
+    WHERE TABLA = 'planillareparto_env'
+  ), INTERVAL 15 + 15 MINUTE) > TIMESTAMP(CURRENT_DATETIME('America/Lima')))
+    THEN 'OK'
+    ELSE 'Revisar' END AS VALIDACION_CARGA
+FROM `tc-sc-bi-bigdata-hdpe-pjx-dev.REPLICA_ESPEJO_TMS.planillareparto_env` ig
+UNION ALL
+SELECT
+  'poblacion_cor' AS TABLA,
+  MAX(FECHA_CARGA) AS FECHA_CARGA,
+  (
+    SELECT FECHA_CARGA
+    FROM tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.tms_ingesta
+    WHERE TABLA = 'poblacion_cor'
+  ) AS EJECUCION_BOT,
+  '1 dia' AS FRECUENCIA_EJECUCION_HORAS,
+  CASE 
+    WHEN (DATETIME_ADD(MAX(FECHA_CARGA), INTERVAL 24 HOUR) > TIMESTAMP(CURRENT_DATETIME('America/Lima')) or DATETIME_ADD((
+    SELECT FECHA_CARGA
+    FROM tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.tms_ingesta
+    WHERE TABLA = 'poblacion_cor'
+  ), INTERVAL 24 HOUR) > TIMESTAMP(CURRENT_DATETIME('America/Lima')))
+    THEN 'OK'
+    ELSE 'Revisar' END AS VALIDACION_CARGA
+FROM `tc-sc-bi-bigdata-hdpe-pjx-dev.REPLICA_ESPEJO_TMS.poblacion_cor` ig
+UNION ALL
+SELECT
+  'repartoenvio_env' AS TABLA,
+  MAX(FECHA_CARGA) AS FECHA_CARGA,
+  (
+    SELECT FECHA_CARGA
+    FROM tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.tms_ingesta
+    WHERE TABLA = 'repartoenvio_env'
+  ) AS EJECUCION_BOT,
+  '15 min' AS FRECUENCIA_EJECUCION_HORAS,
+  CASE 
+    WHEN (DATETIME_ADD(MAX(FECHA_CARGA), INTERVAL 15+15 MINUTE) > TIMESTAMP(CURRENT_DATETIME('America/Lima')) or DATETIME_ADD((
+    SELECT FECHA_CARGA
+    FROM tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.tms_ingesta
+    WHERE TABLA = 'repartoenvio_env'
+  ), INTERVAL 15 + 15 MINUTE) > TIMESTAMP(CURRENT_DATETIME('America/Lima')))
+    THEN 'OK'
+    ELSE 'Revisar' END AS VALIDACION_CARGA
+FROM `tc-sc-bi-bigdata-hdpe-pjx-dev.REPLICA_ESPEJO_TMS.repartoenvio_env` ig
+UNION ALL
+SELECT
+  'ruta_des' AS TABLA,
+  MAX(FECHA_CARGA) AS FECHA_CARGA,
+  (
+    SELECT FECHA_CARGA
+    FROM tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.tms_ingesta
+    WHERE TABLA = 'ruta_des'
+  ) AS EJECUCION_BOT,
+  '1 dia' AS FRECUENCIA_EJECUCION_HORAS,
+  CASE 
+    WHEN (DATETIME_ADD(MAX(FECHA_CARGA), INTERVAL 24 HOUR) > TIMESTAMP(CURRENT_DATETIME('America/Lima')) or DATETIME_ADD((
+    SELECT FECHA_CARGA
+    FROM tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.tms_ingesta
+    WHERE TABLA = 'ruta_des'
+  ), INTERVAL 24 HOUR) > TIMESTAMP(CURRENT_DATETIME('America/Lima')))
+    THEN 'OK'
+    ELSE 'Revisar' END AS VALIDACION_CARGA
+FROM `tc-sc-bi-bigdata-hdpe-pjx-dev.REPLICA_ESPEJO_TMS.ruta_des` ig
+UNION ALL
+SELECT
+  'transportador_des' AS TABLA,
+  MAX(FECHA_CARGA) AS FECHA_CARGA,
+  (
+    SELECT FECHA_CARGA
+    FROM tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.tms_ingesta
+    WHERE TABLA = 'transportador_des'
+  ) AS EJECUCION_BOT,
+  '15 min' AS FRECUENCIA_EJECUCION_HORAS,
+  CASE 
+    WHEN (DATETIME_ADD(MAX(FECHA_CARGA), INTERVAL 15+15 MINUTE) > TIMESTAMP(CURRENT_DATETIME('America/Lima')) or DATETIME_ADD((
+    SELECT FECHA_CARGA
+    FROM tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.tms_ingesta
+    WHERE TABLA = 'transportador_des'
+  ), INTERVAL 15+15 MINUTE) > TIMESTAMP(CURRENT_DATETIME('America/Lima')))
+    THEN 'OK'
+    ELSE 'Revisar' END AS VALIDACION_CARGA
+FROM `tc-sc-bi-bigdata-hdpe-pjx-dev.REPLICA_ESPEJO_TMS.transportador_des` ig
+UNION ALL
+SELECT
+  'usuario_cor' AS TABLA,
+  MAX(FECHA_CARGA) AS FECHA_CARGA,
+  (
+    SELECT FECHA_CARGA
+    FROM tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.tms_ingesta
+    WHERE TABLA = 'usuario_cor'
+  ) AS EJECUCION_BOT,
+  '1 dia' AS FRECUENCIA_EJECUCION_HORAS,
+  CASE 
+    WHEN (DATETIME_ADD(MAX(FECHA_CARGA), INTERVAL 24 HOUR) > TIMESTAMP(CURRENT_DATETIME('America/Lima')) or DATETIME_ADD((
+    SELECT FECHA_CARGA
+    FROM tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.tms_ingesta
+    WHERE TABLA = 'usuario_cor'
+  ), INTERVAL 24 HOUR) > TIMESTAMP(CURRENT_DATETIME('America/Lima')))
+    THEN 'OK'
+    ELSE 'Revisar' END AS VALIDACION_CARGA
+FROM `tc-sc-bi-bigdata-hdpe-pjx-dev.REPLICA_ESPEJO_TMS.usuario_cor` ig
+UNION ALL
+SELECT
+  'usuariorol_cor' AS TABLA,
+  MAX(FECHA_CARGA) AS FECHA_CARGA,
+  (
+    SELECT FECHA_CARGA
+    FROM tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.tms_ingesta
+    WHERE TABLA = 'usuariorol_cor'
+  ) AS EJECUCION_BOT,
+  '1 dia' AS FRECUENCIA_EJECUCION_HORAS,
+  CASE 
+    WHEN (DATETIME_ADD(MAX(FECHA_CARGA), INTERVAL 24 HOUR) > TIMESTAMP(CURRENT_DATETIME('America/Lima')) or DATETIME_ADD((
+    SELECT FECHA_CARGA
+    FROM tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.tms_ingesta
+    WHERE TABLA = 'usuariorol_cor'
+  ), INTERVAL 24 HOUR) > TIMESTAMP(CURRENT_DATETIME('America/Lima')))
+    THEN 'OK'
+    ELSE 'Revisar' END AS VALIDACION_CARGA
+FROM `tc-sc-bi-bigdata-hdpe-pjx-dev.REPLICA_ESPEJO_TMS.usuariorol_cor` ig
+UNION ALL
+SELECT
+  'vehiculo_veh' AS TABLA,
+  MAX(FECHA_CARGA) AS FECHA_CARGA,
+  (
+    SELECT FECHA_CARGA
+    FROM tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.tms_ingesta
+    WHERE TABLA = 'vehiculo_veh'
+  ) AS EJECUCION_BOT,
+  '1 dia' AS FRECUENCIA_EJECUCION_HORAS,
+  CASE 
+    WHEN (DATETIME_ADD(MAX(FECHA_CARGA), INTERVAL 24 HOUR) > TIMESTAMP(CURRENT_DATETIME('America/Lima')) or DATETIME_ADD((
+    SELECT FECHA_CARGA
+    FROM tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.tms_ingesta
+    WHERE TABLA = 'vehiculo_veh'
+  ), INTERVAL 24 HOUR) > TIMESTAMP(CURRENT_DATETIME('America/Lima')))
+    THEN 'OK'
+    ELSE 'Revisar' END AS VALIDACION_CARGA
+FROM `tc-sc-bi-bigdata-hdpe-pjx-dev.REPLICA_ESPEJO_TMS.vehiculo_veh` ig
+UNION ALL
+SELECT
+  'envionovedadlog_env' AS TABLA,
+  MAX(FECHA_CARGA) AS FECHA_CARGA,
+  (
+    SELECT FECHA_CARGA
+    FROM tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.tms_ingesta
+    WHERE TABLA = 'envionovedadlog_env'
+  ) AS EJECUCION_BOT,
+  '15 min' AS FRECUENCIA_EJECUCION_HORAS,
+  CASE 
+    WHEN (DATETIME_ADD(MAX(FECHA_CARGA), INTERVAL 15+15 MINUTE) > TIMESTAMP(CURRENT_DATETIME('America/Lima')) or DATETIME_ADD((
+    SELECT FECHA_CARGA
+    FROM tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.tms_ingesta
+    WHERE TABLA = 'envionovedadlog_env'
+  ), INTERVAL 15+15 MINUTE) > TIMESTAMP(CURRENT_DATETIME('America/Lima')))
+    THEN 'OK'
+    ELSE 'Revisar' END AS VALIDACION_CARGA
+FROM `tc-sc-bi-bigdata-hdpe-pjx-dev.REPLICA_ESPEJO_TMS.envionovedadlog_env` ig
+UNION ALL
+SELECT
+  'poblacionestadopais_vcor' AS TABLA,
+  MAX(FECHA_CARGA) AS FECHA_CARGA,
+  (
+    SELECT FECHA_CARGA
+    FROM tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.tms_ingesta
+    WHERE TABLA = 'poblacionestadopais_vcor'
+  ) AS EJECUCION_BOT,
+  '1 dia' AS FRECUENCIA_EJECUCION_HORAS,
+  CASE 
+    WHEN (DATETIME_ADD(MAX(FECHA_CARGA), INTERVAL 24 HOUR) > TIMESTAMP(CURRENT_DATETIME('America/Lima')) or DATETIME_ADD((
+    SELECT FECHA_CARGA
+    FROM tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.tms_ingesta
+    WHERE TABLA = 'poblacionestadopais_vcor'
+  ), INTERVAL 24 HOUR) > TIMESTAMP(CURRENT_DATETIME('America/Lima')))
+    THEN 'OK'
+    ELSE 'Revisar' END AS VALIDACION_CARGA
+FROM `tc-sc-bi-bigdata-hdpe-pjx-dev.REPLICA_ESPEJO_TMS.poblacionestadopais_vcor` ig
+UNION ALL
+SELECT
+  'envionovedadlog_venv' AS TABLA,
+  MAX(FECHA_CARGA) AS FECHA_CARGA,
+  (
+    SELECT FECHA_CARGA
+    FROM tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.tms_ingesta
+    WHERE TABLA = 'envionovedadlog_venv'
+  ) AS EJECUCION_BOT,
+  '15 min' AS FRECUENCIA_EJECUCION_HORAS,
+  CASE 
+    WHEN (DATETIME_ADD(MAX(FECHA_CARGA), INTERVAL 15 + 15 MINUTE) > TIMESTAMP(CURRENT_DATETIME('America/Lima')) or DATETIME_ADD((
+    SELECT FECHA_CARGA
+    FROM tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.tms_ingesta
+    WHERE TABLA = 'envionovedadlog_venv'
+  ), INTERVAL 15 + 15 MINUTE) > TIMESTAMP(CURRENT_DATETIME('America/Lima')))
+    THEN 'OK'
+    ELSE 'Revisar' END AS VALIDACION_CARGA
+FROM `tc-sc-bi-bigdata-hdpe-pjx-dev.REPLICA_ESPEJO_TMS.envionovedadlog_venv` ig)
+ORDER BY FRECUENCIA_EJECUCION_HORAS DESC, VALIDACION_CARGA  DESC

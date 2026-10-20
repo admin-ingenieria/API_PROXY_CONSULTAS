@@ -1,0 +1,3 @@
+select * from rpa_ingenieria.rutas_tms_log rtl
+where rtl.tipoRecepcion in ('BTL','BTL-PROVINCIA')
+and rtl.fecha_envio >= curdate() 

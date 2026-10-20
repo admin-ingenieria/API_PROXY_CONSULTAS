@@ -1,0 +1,10 @@
+select batpl.date_status ultima_fecha,
+(select count(distinct batpl.numero_envio) from rpa_ingenieria.bot_anulaciones_tms_task_exec batte
+inner join rpa_ingenieria.bot_anulaciones_tms_proccess_log batpl 
+on batte.id_task_exec  = batpl.id_task_exec 
+where batpl.date_status  >=curdate()) as folios_procesados_total,
+case when DATE_FORMAT(date_status, '%H:00:00') < DATE_FORMAT(NOW(), '%H:00:00') then 1
+ else 0 end as error_api,
+count( distinct batpl.numero_envio) as ultimos_procesados
+from rpa_ingenieria.bot_anulaciones_tms_proccess_log batpl
+where batpl.id_task_exec  = (select max(id_task_exec) from rpa_ingenieria.bot_anulaciones_tms_proccess_log batte);

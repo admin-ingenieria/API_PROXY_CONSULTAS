@@ -1,0 +1,20 @@
+select
+	(
+	select
+		max(fechaBotFBS)
+	from
+		zeusdb.registro2 r2 ) as ultima_fecha_registro_bot,
+	(
+	select
+		max(fechaRegistro)
+	from
+		zeusdb.registro2 r ) as ultima_fecha_registro_zeus,
+	count(*) as pendientes
+from
+	zeusdb.registros r
+where
+	1 = 1
+	and tipoRecepcion = 'FBS'
+	-- and metodoEnvio = 'common'
+	and estadoBotFBS is null
+and fechaRegistro >= curdate()

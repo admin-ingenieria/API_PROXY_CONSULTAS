@@ -1,0 +1,106 @@
+SELECT * FROM
+(SELECT 'DFC.prueba_WM' as TABLA,  CAST(MAX(FECHA_CARGA) as timestamp) as FECHA_MAXIMA_CARGA,
+IF(DATE(MAX(FECHA_CARGA)) != CURRENT_DATE('America/Los_Angeles'), 'NOK', 'OK') as ESTADO
+FROM `tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.Prueba_WM`   
+UNION ALL
+SELECT 'DFC.wmos_total' as TABLA, CAST(MAX(FECHA_CARGA) as timestamp) as FECHA_MAXIMA_CARGA,
+IF(DATE(MAX(FECHA_CARGA)) != CURRENT_DATE('America/Los_Angeles'), 'NOK', 'OK') as ESTADO
+FROM `tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.wmos_total`
+UNION ALL 
+SELECT 'DFC.wmos_agenda' as TABLA,  CAST(MAX(FECHA_CARGA) as timestamp) as FECHA_MAXIMA_CARGA,
+IF(DATE(MAX(FECHA_CARGA)) != CURRENT_DATE('America/Los_Angeles'), 'NOK', 'OK') as ESTADO
+FROM `tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.wmos_agenda` 
+UNION ALL
+SELECT 'olva.olvaa_PROD' as TABLA,
+cast(max(FECHA_CARGA) as timestamp) as FECHA_MAXIMA_CARGA,
+IF(DATE(max(FECHA_CARGA)) != CURRENT_DATE('America/Los_Angeles'), 'NOK', 'OK') as ESTADO
+FROM `tc-sc-bi-bigdata-hdpe-pjx-dev.olva.Api3Pl_Olvaa_Prod`
+UNION ALL
+SELECT 
+'olva.Api3Pl_Urbano_Prod' AS TABLA,
+cast(max(FECHA_CARGA) as timestamp) as FECHA_MAXIMA_CARGA,
+IF(DATE(max(FECHA_CARGA)) != CURRENT_DATE('America/Los_Angeles'), 'NOK', 'OK') as ESTADO
+FROM `tc-sc-bi-bigdata-hdpe-pjx-dev.urbano.Api3Pl_Urbano_Prod`
+UNION ALL
+SELECT 'DFC.Prueba11' AS TABLA,CAST(MAX(FECHA_CARGA) as timestamp) as FECHA_MAXIMA_CARGA,
+IF(DATE(MAX(FECHA_CARGA)) != CURRENT_DATE('America/Los_Angeles'), 'NOK', 'OK') as ESTADO
+FROM `tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.Prueba11`
+UNION ALL
+SELECT 'DFC.Prueba_ALR' AS TABLA,CAST(MAX(FECHA_UPDATE) as timestamp) as FECHA_MAXIMA_CARGA,
+IF(DATE(MAX(FECHA_UPDATE)) != CURRENT_DATE('America/Los_Angeles'), 'NOK', 'OK') as ESTADO
+FROM `tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.Prueba_ALR`
+UNION ALL
+SELECT 'DFC.Prueba_OFR' AS TABLA,CAST(MAX(FECHA_CARGA) as timestamp) as FECHA_MAXIMA_CARGA,
+IF(DATE(MAX(FECHA_CARGA)) != CURRENT_DATE('America/Los_Angeles'), 'NOK', 'OK') as ESTADO
+FROM `tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.Prueba_OFR`
+UNION ALL
+SELECT 'DFC.Prueba_RR' AS TABLA,CAST(MAX(FECHA_CARGA) as timestamp) as FECHA_MAXIMA_CARGA,
+IF(DATE(MAX(FECHA_CARGA)) != CURRENT_DATE('America/Los_Angeles'), 'NOK', 'OK') as ESTADO 
+FROM `tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.Prueba_RR`
+UNION ALL
+-- SELECT 'DFC.Prueba_T' AS TABLA,CAST(MAX(FECHA_CARGA) as timestamp) as FECHA_MAXIMA_CARGA,
+-- IF(DATE(MAX(FECHA_CARGA)) != CURRENT_DATE('America/Los_Angeles'), 'NOK', 'OK') as ESTADO 
+-- FROM `tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.Prueba_T`
+-- UNION ALL
+SELECT 'DFC.SRX_GPO' AS TABLA,CAST(MAX(FECHA_CARGA) as timestamp) as FECHA_MAXIMA_CARGA,
+IF(DATE(MAX(FECHA_CARGA)) != CURRENT_DATE('America/Los_Angeles'), 'NOK', 'OK') as ESTADO 
+FROM `tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.SRX_GPO`
+UNION ALL
+SELECT 'DFC.IRZ' AS TABLA,CAST(MAX(FECHA_CARGA) as timestamp) as FECHA_MAXIMA_CARGA,
+IF(DATE(MAX(FECHA_CARGA)) != CURRENT_DATE('America/Los_Angeles'), 'NOK', 'OK') as ESTADO 
+FROM `tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.IRZ` 
+UNION ALL
+SELECT 'DFC.PRUEBA_1MS_SK_DEMAND' as TABLA, CAST(MAX( FECHA_CARGA) as timestamp) as FECHA_MAXIMA_CARGA,
+IF(DATE(MAX(FECHA_CARGA)) != CURRENT_DATE('America/Los_Angeles'), 'NOK', 'OK') as ESTADO  FROM `tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.PRUEBA_1MS_SK_DEMAND`
+UNION ALL
+SELECT 'DFC.PRUEBA_1MS', CAST(MAX( FECHA_CARGA) as timestamp) as FECHA_MAXIMA_CARGA,
+IF(DATE(MAX(FECHA_CARGA)) != CURRENT_DATE('America/Los_Angeles'), 'NOK', 'OK') as ESTADO  FROM `tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.PRUEBA_1MS`
+UNION ALL 
+SELECT 'DFC_polygon_report', CAST(MAX(FECHA_CARGA) AS TIMESTAMP) AS FECHA_MAXIMA_CARGA, IF(
+    DATE_DIFF(
+      MAX(FECHA_CARGA),
+      CAST(current_datetime('UTC-5') AS TIMESTAMP),
+      HOUR
+    ) < 2,
+    'OK',
+    'NOK'
+  ) as ESTADO
+FROM tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.polygon_report
+)
+UNION ALL
+SELECT 
+  'prod_fby_prepared' AS NOMBRE_TABLA,
+  MAX(FECHA_CARGA) AS FECHA_MAXIMA_CARGA,
+  CASE 
+    WHEN EXTRACT(DATE FROM MAX(FECHA_CARGA)) = CURRENT_DATE() THEN 'OK' 
+  ELSE 'NOK'
+  END AS ESTADO
+FROM 
+  `tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.prod_fby_prepared`
+
+UNION ALL
+SELECT 
+  'infobip_fullfilment' AS NOMBRE_TABLA,
+  MAX(FECHA_CARGA) AS FECHA_MAXIMA_CARGA,
+  CASE 
+    WHEN  EXTRACT(DATE FROM MAX(FECHA_CARGA)) = CURRENT_DATE() THEN 'OK' 
+  ELSE 'NOK'
+  END AS ESTADO
+FROM 
+  `tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.infobip_fullfilment`
+UNION ALL
+SELECT 
+  'infobip_envio_fullfilment' AS NOMBRE_TABLA,
+  MAX(FECHA_CARGA) AS FECHA_MAXIMA_CARGA,
+  CASE 
+    WHEN EXTRACT(DATE FROM MAX(FECHA_CARGA)) = CURRENT_DATE() THEN 'OK' 
+  ELSE 'NOK'
+  END AS ESTADO
+FROM 
+  `tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.infobip_envio_fullfilment`
+order by FECHA_MAXIMA_CARGA asc
+
+
+
+
+

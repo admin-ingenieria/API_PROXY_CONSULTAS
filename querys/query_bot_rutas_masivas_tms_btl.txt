@@ -1,0 +1,39 @@
+select DISTINCT s.tc_shipment_id C_VIAJE, l.tc_lpn_id rastreo,l.TC_ORDER_ID, 
+case when pp.placa is null then s.trailer_number else pp.placa end mensajero, 
+case when pp.placa is null then s.trailer_number else pp.placa end placa,
+l.shipped_dttm D_FECHORACRE
+,l.TC_COMPANY_ID,
+    CASE
+    WHEN l.TC_COMPANY_ID='1001' AND l.tc_order_id LIKE 'R%' THEN SUBSTR(l.tc_order_id,2,12)
+    WHEN l.TC_COMPANY_ID='1001' AND l.tc_order_id LIKE '12%' THEN l.tc_order_id
+    WHEN l.TC_COMPANY_ID='1006' AND l.tc_order_id LIKE 'R%' THEN SUBSTR(l.tc_order_id,2,8)
+    WHEN l.TC_COMPANY_ID='1006' THEN l.TC_ORDER_ID
+    WHEN l.TC_COMPANY_ID='1007' AND l.TC_ORDER_ID LIKE 'CU000%' THEN SUBSTR(l.TC_ORDER_ID,6,9)
+    WHEN l.TC_COMPANY_ID='1007' AND l.TC_ORDER_ID LIKE 'CM000%' THEN SUBSTR(l.TC_ORDER_ID,6,9)
+    WHEN l.TC_COMPANY_ID='1007' AND l.TC_ORDER_ID LIKE 'FCU000%' THEN SUBSTR(l.TC_ORDER_ID,7,9)
+    WHEN l.TC_COMPANY_ID='1007' AND l.TC_ORDER_ID LIKE 'FCM000%' THEN SUBSTR(l.TC_ORDER_ID,7,9)
+    WHEN l.TC_COMPANY_ID='1007' AND l.TC_ORDER_ID LIKE 'RCU000%' THEN SUBSTR(l.TC_ORDER_ID,7,9)
+    WHEN l.TC_COMPANY_ID='1007' AND l.TC_ORDER_ID LIKE 'RCM000%' THEN SUBSTR(l.TC_ORDER_ID,7,9)
+    WHEN l.TC_COMPANY_ID='1007' AND l.TC_ORDER_ID LIKE 'RFCU000%' THEN SUBSTR(l.TC_ORDER_ID,8,9)
+    WHEN l.TC_COMPANY_ID='1007' AND l.TC_ORDER_ID LIKE 'RFCM000%' THEN SUBSTR(l.TC_ORDER_ID,8,9)
+    END DO_TMS
+from outpt_lpn l
+inner join shipment s on s.tc_shipment_id = l.tc_shipment_id
+inner join 
+(
+select distinct p.ref_field_1 shipment, p.ref_field_4 placa, p.menu_optn_name,
+case when o.placa is not null then '1' else '0' end Unload
+from prod_trkg_tran p 
+left join 
+(
+select distinct p.ref_field_1 shipment, p.ref_field_4 placa, p.menu_optn_name
+from prod_trkg_tran p 
+where p.menu_optn_name in ('Unload Container')
+) o on o.shipment = p.ref_field_1 and o.placa = p.ref_field_4 
+where p.menu_optn_name in ('BTL Cargar oLPN') 
+and case when o.placa is not null then '1' else '0' end = '0'
+) pp on pp.shipment = s.tc_shipment_id
+where l.shipped_dttm >= TO_TIMESTAMP(
+    TO_CHAR(SYSDATE - 1, 'YYYY-MM-DD') || ' 22:00:00',
+    'YYYY-MM-DD HH24:MI:SS')
+and substr(s.tc_shipment_id,1,3) in ('750','850')

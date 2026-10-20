@@ -1,0 +1,19 @@
+SELECT * FROM (
+SELECT 'tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.tab_dfc_kairos_jdz' AS TABLA, MAX(FECHA_EJECUCION) as FECHA_MAXIMA_CARGA,
+IF(DATE(MAX(FECHA_EJECUCION)) != CURRENT_DATE('America/Lima'), 'NOK', 'OK') as ESTADO  FROM `tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.tab_dfc_kairos_jdz`
+UNION ALL
+SELECT 'tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.TRANSPORTISTA_BI' AS TABLA, MAX(FECHA_CARGA) as FECHA_MAXIMA_CARGA,
+IF(DATE(MAX(FECHA_CARGA)) != CURRENT_DATE('America/Lima'), 'NOK', 'OK') as ESTADO  FROM `tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.TRANSPORTISTA_BI`
+UNION ALL
+SELECT 'tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.wmos180_lrh' AS TABLA, MAX(FECHA_CARGA) as FECHA_MAXIMA_CARGA,
+IF(DATE(MAX(FECHA_CARGA)) != CURRENT_DATE('America/Lima'), 'NOK', 'OK') as ESTADO  FROM `tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.wmos180_lrh`
+UNION ALL
+SELECT 'tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.IRZ' AS TABLA, FORMAT_TIMESTAMP('%Y-%m-%d %H:%M:%S', MAX(FECHA_CARGA)) AS FECHA_MAXIMA_CARGA,
+IF(DATE(MAX(FECHA_CARGA)) != CURRENT_DATE('America/Lima'), 'NOK', 'OK') as ESTADO  FROM `tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.IRZ`
+UNION ALL
+SELECT 'tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.tab_dfc_apprimay_jdz' AS TABLA, FORMAT_TIMESTAMP('%Y-%m-%d %H:%M:%S', MAX(CREATED_AT)) AS FECHA_MAXIMA_CARGA,
+IF(DATE(MAX(CREATED_AT)) != CURRENT_DATE('America/Lima'), 'NOK', 'OK') as ESTADO  FROM `tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.tab_dfc_apprimay_jdz`
+UNION ALL
+SELECT 'tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.tab_dfc_rutas_zeus_jdz' AS TABLA, MAX(FECHA_CARGA) as FECHA_MAXIMA_CARGA,
+IF(DATE(MAX(FECHA_CARGA)) != CURRENT_DATE('America/Lima'), 'NOK', 'OK') as ESTADO  FROM `tc-sc-bi-bigdata-hdpe-pjx-dev.DFC.tab_dfc_rutas_zeus_jdz`
+) order by FECHA_MAXIMA_CARGA asc;

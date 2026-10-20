@@ -1,0 +1,35 @@
+   select distinct  arr.codigoRuta as codigoRecepcion, 
+   r.codigoRoll as codigoRolContainer, 
+   arr.ruta, err.nombre estadoRolContainer,
+   apr.codigoSeguimiento  as rastreo,
+	prc.id idPlanificacion,prc.fechaRegistro as fechaRegistroCargaPlacas,
+    prc.transportador  as movil, prc.placa , prc.mensajero,
+    arr.fechaDespacho as fechaCerrado,
+    tarr.idEstado as estadoIntegracionZeus,
+    tms.idJob as idJob_tms,
+    tms.fecha_envio as fechaEnvio_tms,
+    tms.placa as placa_tms,
+    tms.mensajero as mensajero_tms,
+    tms.cantidad_envios as cantidad_envios_tms,
+    csr.cantidadVisitasApi as cantidad_envios_SR,
+    tms.response as response_tms,
+    tms.descripcion as descripcion_tms,
+    tms.estado as estado_tms,
+    tms.tipoRecepcion,
+    prc.transportador,
+    csr.codigo_plan_sp,csr.codigo_ruta_sp,
+    csr.fechaCreacion as fechaEnvio_sp,
+    csr.estado as estado_sp,
+    csr.response as response_sp from zeusdb.planificacion_rutas_cerradas prc
+   left join zeusdb.anclaje_rolls_rutas arr on prc.codigoRuta = arr.codigoRuta and arr.fechaAnclaje >= date_sub(current_date(), interval 18 hour )
+   left join zeusdb.rolls r on arr.idRoll = r.id 
+   left join zeusdb.anclaje_pedidos_rolls apr on apr.idAnclajeRR = arr.id
+   left join zeusdb.registros r2 on r2.codigoSeguimiento = apr.codigoSeguimiento
+   left join zeusdb.estados err on err.id = arr.idEstado 
+   left join zeusdb.estados erg on erg.id = r2.idEstado
+   inner join zeusdb.tracking_anclajes_rolls_rutas tarr on tarr.idAnclajeRR = arr.id and tarr.idEstado = 12
+   inner join (select idJob,fecha_envio,placa,mensajero,codigo_recepcion AS codigoRuta ,cantidad_envios,response,descripcion,estado,tipoRecepcion from rpa_ingenieria_test.rutas_tms_log rtl
+   where 1=1 and fecha_envio >= curdate()) as tms on tms.codigoRuta = arr.codigoRuta
+   left join (select distinct rs.codigoRecepcion,placa,mensajero,rs.cantidadVisitasApi,rs.codigo_plan_sp,rs.codigo_ruta_sp,rs.fechaCreacion,rs.estado,rs.response from rpa_ingenieria.rutas_simpleroute rs
+	where rs.fechaCreacion >=curdate()) as csr on csr.placa = prc.placa
+	where 1=1

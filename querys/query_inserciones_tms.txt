@@ -1,0 +1,60 @@
+
+
+SELECT 
+case ID_NEGOCIO 
+	when 801 then 'Falabella' 
+	when 813 then 'Tottus' 
+	when 814 then 'Sodimac' 
+	when 815 then 'Linio' 
+	when 817 then 'Falabella F.com' 
+end as negocio,
+CONVERT(VARCHAR(16), ultima_fecha_etl, 120) as ultima_fecha_etl,
+pendientes_enviar_api,
+Enviados_insertados,
+Enviados_no_nsertados,
+CONVERT(VARCHAR(16), ultima_fecha_api, 120) as ultima_fecha_api,
+CASE 
+	WHEN ID_NEGOCIO=801 /*Falabella*/ AND 
+	(
+		ultima_fecha_etl < DATEADD(HOUR, -2, GETDATE()) /*hace dos horas no ejecuta etl*/ or
+		ultima_fecha_api < DATEADD(HOUR, -2, ultima_fecha_etl) /*fecha ejecuta api < ejecuta etl ´por mas de 2 horas*/ or
+		pendientes_enviar_api > 10000 /*pendientes mayor a 10 mil*/ or
+		(Enviados_insertados < Enviados_no_nsertados)/*mas de la mitad no se esta insertando*/
+	) then 1
+	WHEN ID_NEGOCIO=813 /*Tottus*/ AND 
+	(
+		ultima_fecha_etl < DATEADD(HOUR, -2, GETDATE()) /*hace dos horas no ejecuta etl*/ or
+		ultima_fecha_api < DATEADD(HOUR, -2, ultima_fecha_etl) /*fecha ejecuta api < ejecuta etl ´por mas de 2 horas*/ or
+		pendientes_enviar_api > 1000 /*pendientes mayor a mil*/ or
+		(Enviados_insertados < Enviados_no_nsertados)/*mas de la mitad no se esta insertando*/
+	) then 1
+	WHEN ID_NEGOCIO=814 /*Sodimac*/ AND 
+	(
+		ultima_fecha_etl < DATEADD(HOUR, -24, GETDATE()) /*hace 24 horas no ejecuta etl*/ or
+		ultima_fecha_api < DATEADD(HOUR, -8, ultima_fecha_etl) /*fecha ejecuta api < ejecuta etl ´por mas de 8 horas*/ or
+		pendientes_enviar_api > 1000 /*pendientes mayor a mil*/ or
+		(Enviados_insertados < Enviados_no_nsertados)/*mas de la mitad no se esta insertando*/
+	) then 1
+	WHEN ID_NEGOCIO=815 /*Linio*/ AND 
+	(
+		ultima_fecha_etl < DATEADD(HOUR, -2, GETDATE()) /*hace dos horas no ejecuta etl*/ or
+		ultima_fecha_api < DATEADD(HOUR, -2, ultima_fecha_etl) /*fecha ejecuta api < ejecuta etl ´por mas de 2 horas*/ or
+		pendientes_enviar_api > 5000 /*pendientes mayor a 5 mil*/ or
+		(Enviados_insertados < Enviados_no_nsertados)/*mas de la mitad no se esta insertando*/
+	) then 1 else 0
+end revisar
+
+from
+(
+
+	SELECT
+	ID_NEGOCIO,
+	max(FECHA_AUTOMATIZACION)  as ultima_fecha_etl,
+	sum(case when (ESTADO_AUTOMATIZACION IN ('COMPLETO','REINTENTAR')) then 1 else 0 end) as pendientes_enviar_api,
+	sum(case when (ESTADO_AUTOMATIZACION = 'INSERTADO' AND FECHA_AUTOMATIZACION>DATEADD(HOUR, -24, GETDATE())) then 1 else 0 end) as Enviados_insertados, -- hace 24h
+	sum(case when (ESTADO_AUTOMATIZACION = 'NO INSERTADO' AND FECHA_AUTOMATIZACION>DATEADD(HOUR, -72, GETDATE())) then 1 else 0 end) as Enviados_no_nsertados, -- hace 72h
+	max(FECHA_API)as ultima_fecha_api
+	FROM apl_aut_centralizador_data_bu.INSERCIONES i
+	--where ESTADO_AUTOMATIZACION = 'COMPLETO'
+	group by ID_NEGOCIO
+)t

@@ -1,0 +1,14 @@
+select (select max(fechaRegistroInicio) from anclajevanslima 
+where 1=1 
+and estadoRC_bot is not null
+) ultima_fecha_bot, count(*) as pendientes, (select count(*) from anclajederuta a 
+inner join anclajevanslima a2 on a.codigoRecepcion = a2.codigoRecepcion 
+where 1=1 
+and fechaRegistroInicio  >= curdate() 
+and estadoRC_bot is not null) as optimizados_hoy from anclajederuta a 
+inner join anclajevanslima a2 on a.codigoRecepcion = a2.codigoRecepcion 
+where 1=1 
+and a.estadoRolContainer = 'CERRADO'
+and a2.tipoRecepcion = 'VANS RUTEO FIJO'
+and fechaRegistroInicio  >= curdate() 
+and estadoRC_bot is null;
