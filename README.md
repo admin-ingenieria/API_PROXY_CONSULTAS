@@ -46,6 +46,10 @@ Las consultas devuelven una lista de registros en JSON (`orient='records'`).
 | Endpoint | Método | Destino |
 |---|---|---|
 | `/proxySincronizacionEstadoTMS` | GET, POST | Logimas: sincronización de estado |
+| `/proxySincronizacionEstadoTMSAsync` | POST | Logimas: sincronización de estado no bloqueante (responde 202 con `requestId` y envía en segundo plano, con reintentos) |
+| `/proxySincronizacionEstadoTMSAsync/estado/<requestId>` | GET | Estado y resultado de una request del endpoint async |
+| `/monitor/sincronizacion` | GET | Métricas: cola, conteo por estado (total y hoy), pendiente más antiguo, OK última hora y últimos fallidos (`?fallidos=N`) |
+| `/monitor/sincronizacion/reprocesar` | POST | Reencola los FALLIDO. Body opcional `{"numeroEnvio": "..."}` para uno solo |
 | `/proxyGuiaRemision` | POST | Logimas: generar guías de remisión |
 | `/proxycerrarPlanillaTMS` | GET, POST | Logimas: cerrar planilla de reparto |
 | `/proxyAnularEnvio` | POST | Logimas: cancelación de envío |
@@ -133,3 +137,8 @@ Los registros de la aplicación se guardan en `debug-api-putlight.log`, con rota
 
 - Las llamadas a Logimas y Corp Logistics se hacen con `verify=False` (sin validar el certificado). Es el comportamiento actual; conviene revisarlo con el equipo de seguridad.
 - `cx_Oracle` requiere el Instant Client instalado y accesible en el `PATH`.
+
+
+### Tabla de control de sincronización async
+
+Cada request del endpoint async queda en la tabla `sincronizacion_estado` (SQLite, archivo `sincronizacion.db`, configurable con `SYNC_DB_FILE`). Estados: `PENDIENTE` → `PROCESANDO` → `OK` o `FALLIDO` (`RECHAZADO` si la cola estaba llena). Guarda intentos, HTTP status, respuesta de Logimas, duración y fechas. Al reiniciar, los `PENDIENTE` y `PROCESANDO` se vuelven a encolar. Pensado para un solo proceso (`app.run`); con varios procesos habría que pasar a una BD compartida.

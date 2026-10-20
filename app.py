@@ -2,8 +2,9 @@ from flask import Flask, json,request
 from flask_cors import CORS, cross_origin
 
 #  Panel Control Tower
-from controllers import seguimiento
+from controllers import seguimiento, sincronizacion_async
 import time
+import uuid
 from datetime import datetime
 import logging
 import logging.handlers
@@ -198,6 +199,51 @@ def proxy():
         total_time = round((time.time() - start_time) * 1000, 2)
         logger.info(f"[proxySincronizacionEstadoTMS][{request_id}] === FIN REQUEST - Tiempo total: {total_time}ms ===")
 
+
+
+@cross_origin
+@app.route('/proxySincronizacionEstadoTMSAsync', methods=['POST'])
+def proxy_async():
+    # Versión no bloqueante: valida, encola y responde 202. El envío a Logimas ocurre en segundo plano.
+    request_id = uuid.uuid4().hex
+    data = request.get_json(silent=True)
+
+    faltan = sincronizacion_async.validar(data)
+    if faltan:
+        logger.warning(f"[proxySincronizacionEstadoTMSAsync][{request_id}] Payload inválido, faltan: {faltan}")
+        return {"Categoria": "Error", "Mensaje": f"Faltan campos: {', '.join(faltan)}"}, 400
+
+    body = sincronizacion_async.construir_body(data)
+    if not sincronizacion_async.encolar(request_id, body):
+        logger.error(f"[proxySincronizacionEstadoTMSAsync][{request_id}] Cola llena, request rechazada")
+        return {"Categoria": "Error", "Mensaje": "Servicio saturado, reintente"}, 503
+
+    logger.info(f"[proxySincronizacionEstadoTMSAsync][{request_id}] Encolado envio={body['numeroEnvio']} pendientes={sincronizacion_async.pendientes()}")
+    return {"Categoria": "Correcto", "Mensaje": "Aceptado", "requestId": request_id}, 202
+
+
+@cross_origin
+@app.route('/proxySincronizacionEstadoTMSAsync/estado/<request_id>', methods=['GET'])
+def proxy_async_estado(request_id):
+    fila = sincronizacion_async.obtener(request_id)
+    if not fila:
+        return {"Categoria": "Error", "Mensaje": "request_id no encontrado"}, 404
+    return fila, 200
+
+
+@cross_origin
+@app.route('/monitor/sincronizacion', methods=['GET'])
+def monitor_sincronizacion():
+    return sincronizacion_async.resumen(limite_fallidos=request.args.get('fallidos', 20, type=int)), 200
+
+
+@cross_origin
+@app.route('/monitor/sincronizacion/reprocesar', methods=['POST'])
+def monitor_sincronizacion_reprocesar():
+    data = request.get_json(silent=True) or {}
+    n = sincronizacion_async.reprocesar_fallidos(data.get('numeroEnvio'))
+    logger.info(f"[monitor/sincronizacion] Reprocesados {n} fallidos (numeroEnvio={data.get('numeroEnvio')})")
+    return {"Categoria": "Correcto", "reencolados": n}, 200
 
 
 @cross_origin
